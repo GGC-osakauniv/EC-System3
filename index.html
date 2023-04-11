@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>Drive API Quickstart</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <p>Drive API Quickstart</p>
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
+    <label for="item">商品名<label>
+    <select class="item" name="item">
+    </select>
+    <br>
+    <label for="variation">バリエーション</label>
+    <select class="variation" name="variation">
+    </select>
+    <br>
+    <label for="size">サイズ</label>
+    <select class="size" name="size">
+    </select>
+    <br>
+    <div class="" id="stock">
+
+    </div>
+    <br>
+    <label for="num">個数</label>
+    <select class="num" name="num">
+    </select>
+    <br>
+    <button type="button" name="button">保存</button>
+    <br>
+    <script type="text/javascript" src="sample.js"></script>
+
+    <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};handleClientLoad()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+  </body>
+</html>

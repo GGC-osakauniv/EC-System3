@@ -16,12 +16,16 @@ function make_tr() {
       const select = document.createElement("select");
       const id_value = id + num_row.toString();
       select.setAttribute("id", id_value);
+      select.setAttribute("class", "cell_select");
       td.appendChild(select);
+      td.setAttribute("class", "cell_m" + (num_row%2).toString());
     } else {
       const span = document.createElement("span");
       const id_value = id + num_row.toString();
       span.setAttribute("id", id_value);
+      span.setAttribute("class", "cell_span");
       td.appendChild(span);
+      td.setAttribute("class", "cell_m" + (num_row%2).toString());
     }
     tr.appendChild(td);
   });

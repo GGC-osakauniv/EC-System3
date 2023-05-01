@@ -3,45 +3,49 @@
 <head>
   <title>GGC Shop</title>
   <meta charset="utf-8" />
+  <link rel="stylesheet" href="main.css">
 </head>
 
 <body onload="onload();">
-  <header>
+  <header class="container">
+    <div class="header">購入</div>
+    <div class="header">在庫表</div>
+    <div class="header">購入履歴</div>
   </header>
-
-  <button type="button" name="button" onclick="init();">初期化</button>
-  <table>
-    <td>
-      <button onclick="make_tr()">追加</button>
-    </td>
-    <td>
-      <span id="sum">計 0円</button>
-    </td>
-    <td>
-      <button onclick="purchase()">決済</button>
-    </td>
-  </table>
-  <table id="table">
+  <table class="table_h">
     <tr>
-      <td>
-        <label>アイテム</label>
+      <td class="add">
+        <button onclick="make_tr()">追加</button>
       </td>
-      <td>
-        <label>バリエーション</label>
+      <td class="total">
+        <span id="sum">計 0円</button>
       </td>
-      <td>
-        <label>サイズ</label>
-      </td>
-      <td>
-        <label>価格</label>
-      </td>
-      <td>
-        <label>購入数</label>
+      <td class="purchase">
+        <button onclick="purchase()">決済</button>
       </td>
     </tr>
   </table>
-
-  <script type="text/javascript" src="sample.js"></script>
+  <table class="table_m" id="table">
+    <tr>
+      <th class="cell_h">
+        <label>アイテム</label>
+      </th>
+      <th class="cell_h">
+        <label>バリエーション</label>
+      </th>
+      <th class="cell_h">
+        <label>サイズ</label>
+      </th>
+      <th class="cell_h">
+        <label>価格</label>
+      </th>
+      <th class="cell_h">
+        <label>購入数</label>
+      </th>
+    </tr>
+  </table>
+  <button type="button" name="button" onclick="init();">初期化</button>
+  <script type="text/javascript" src="main.js"></script>
 </body>
 
 </html>

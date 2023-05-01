@@ -18,14 +18,14 @@ function make_tr() {
       select.setAttribute("id", id_value);
       select.setAttribute("class", "cell_select");
       td.appendChild(select);
-      td.setAttribute("class", "cell_m" + (num_row%2).toString());
+      td.setAttribute("class", "cell_m" + (num_row % 2).toString());
     } else {
       const span = document.createElement("span");
       const id_value = id + num_row.toString();
       span.setAttribute("id", id_value);
       span.setAttribute("class", "cell_span");
       td.appendChild(span);
-      td.setAttribute("class", "cell_m" + (num_row%2).toString());
+      td.setAttribute("class", "cell_m" + (num_row % 2).toString());
     }
     tr.appendChild(td);
   });
@@ -39,7 +39,11 @@ function show_item(i) {
   stock_dict = JSON.parse(localStorage.getItem('stock'));
   const items = Object.keys(stock_dict).sort();
   const select_item = document.getElementById('item' + i.toString());
-  const select_variation = document.getElementById('variation' + num_row.toString());
+  const select_variation = document.getElementById('variation' + i.toString());
+  console.log('variation' + i.toString())
+  while (select_variation.firstChild) {
+    select_variation.removeChild(select_variation.firstChild);
+  }
   const select_size = document.getElementById('size' + i.toString());
   while (select_size.firstChild) {
     select_size.removeChild(select_size.firstChild);
@@ -142,17 +146,12 @@ function show_num(select_item, select_variation, select_size, i) {
 function show_total(select_num) {
   select_num.addEventListener("change", function () {
     sum = 0;
-    console.log("a");
     for (let i = 0; i < num_row; i++) {
       const cal_num = document.getElementById('num' + i.toString()).value;
       let cal_price = 0;
-      console.log('num' + i.toString());
-      console.log(cal_num);
       if (isPositiveInteger(cal_num)) {
-        console.log("true");
         const item = document.getElementById('item' + i.toString()).value
         cal_price = stock_dict[item]["price"];
-        console.log(item);
       } else {
 
       }

@@ -1,15 +1,30 @@
 let stock_dict = {};
 let num_row = 0;
+let url1 = "https://4z2mkmwx7j.execute-api.ap-northeast-1.amazonaws.com/0630-1"
+let url2 = "https://guj4pafnoi.execute-api.ap-northeast-1.amazonaws.com/0630-1"
 
-function onload() {
-  init();
-  make_tr();
+function load() {
+  fetch(url1)
+    .then(function (response) {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then(function (data) {
+      stock_dict = data.stock;
+      make_tr();
+    })
+    .catch(function (error) {
+      // エラーハンドリングを行うコードをここに書く
+      alert("在庫を取得できませんでした。")
+    });
 }
 
 function make_tr() {
   const table = document.getElementById("table");
   const tr = document.createElement("tr");
-  const id_list = ["item", "variation", "size", "price", "num"];
+  const id_list = ["name", "variation", "size", "price", "num"];
   id_list.forEach(function (id) {
     const td = document.createElement("td");
     if (id != "price") {
@@ -31,16 +46,16 @@ function make_tr() {
   });
   table.appendChild(tr)
   num_row += 1;
-  show_item(num_row - 1);
+  show_name(num_row - 1);
 }
 
-function show_item(i) {
+function show_name(i) {
   //サーバー通信に置き換え
-  stock_dict = JSON.parse(localStorage.getItem('stock'));
-  const items = Object.keys(stock_dict).sort();
-  const select_item = document.getElementById('item' + i.toString());
+
+  const names = Object.keys(stock_dict).sort();
+  const select_name = document.getElementById('name' + i.toString());
   const select_variation = document.getElementById('variation' + i.toString());
-  console.log('variation' + i.toString())
+  console.log("show_name")
   while (select_variation.firstChild) {
     select_variation.removeChild(select_variation.firstChild);
   }
@@ -53,25 +68,26 @@ function show_item(i) {
     select_num.removeChild(select_num.firstChild);
   }
   let option = document.createElement("option");
-  select_item.appendChild(option);
-  items.forEach(function (item) {
+  select_name.appendChild(option);
+  names.forEach(function (name) {
     let option = document.createElement("option");
-    option.textContent = item;
-    option.value = item;
-    select_item.appendChild(option);
-    show_variation(select_item, i);
+    option.textContent = name;
+    option.value = name;
+    select_name.appendChild(option);
+    show_variation(select_name, i);
   });
+  select_name.focus()
 }
 
-function show_variation(select_item, i) {
-  select_item.addEventListener("change", function () {
-    value_item = select_item.value;
+function show_variation(select_name, i) {
+  select_name.addEventListener("change", function () {
+    value_name = select_name.value;
     //価格表示
     const price = document.getElementById('price' + i.toString());
-    price.textContent = stock_dict[value_item]["price"].toString() + "円";
-    price.value = stock_dict[value_item]["price"].toString();
+    price.textContent = stock_dict[value_name]["price"].toString() + "円";
+    price.value = stock_dict[value_name]["price"].toString();
     //バリエーション表示
-    const variations = Object.keys(stock_dict[value_item]["variation"]).sort();
+    const variations = Object.keys(stock_dict[value_name]["variation"]).sort();
     const select_variation = document.getElementById('variation' + i.toString());
     while (select_variation.firstChild) {
       select_variation.removeChild(select_variation.firstChild);
@@ -92,15 +108,16 @@ function show_variation(select_item, i) {
       option.value = variation;
       select_variation.appendChild(option);
     });
-    show_size(select_item, select_variation, i)
+    select_variation.focus()
+    show_size(select_name, select_variation, i)
   })
 }
 
-function show_size(select_item, select_variation, i) {
+function show_size(select_name, select_variation, i) {
   select_variation.addEventListener("change", function () {
-    value_item = select_item.value;
+    value_name = select_name.value;
     value_variation = select_variation.value;
-    const sizes = Object.keys(stock_dict[value_item]["variation"][value_variation]).sort();
+    const sizes = Object.keys(stock_dict[value_name]["variation"][value_variation]).sort();
     const select_size = document.getElementById('size' + i.toString());
     while (select_size.firstChild) {
       select_size.removeChild(select_size.firstChild);
@@ -114,22 +131,24 @@ function show_size(select_item, select_variation, i) {
     sizes.forEach(function (size) {
       let option = document.createElement("option");
       //在庫表示も追加
-      let stock = stock_dict[value_item]["variation"][value_variation][size]
+      let stock = stock_dict[value_name]["variation"][value_variation][size]
       option.textContent = size + "(残" + stock.toString() + ")";
       option.value = size;
       select_size.appendChild(option);
     });
-    show_num(select_item, select_variation, select_size, i);
+    select_size.focus()
+    show_num(select_name, select_variation, select_size, i);
   });
 
 }
-function show_num(select_item, select_variation, select_size, i) {
+
+function show_num(select_name, select_variation, select_size, i) {
   select_size.addEventListener("change", function () {
-    value_item = select_item.value;
+    value_name = select_name.value;
     value_variation = select_variation.value
     value_size = select_size.value;
     value_ = select_size.value;
-    const num = stock_dict[value_item]["variation"][value_variation][value_size];
+    const num = stock_dict[value_name]["variation"][value_variation][value_size];
     const select_num = document.getElementById('num' + i.toString());
     while (select_num.firstChild) {
       select_num.removeChild(select_num.firstChild);
@@ -140,9 +159,11 @@ function show_num(select_item, select_variation, select_size, i) {
       option.value = j;
       select_num.appendChild(option);
     }
+    select_num.focus()
     show_total(select_num)
   });
 }
+
 function show_total(select_num) {
   select_num.addEventListener("change", function () {
     sum = 0;
@@ -150,8 +171,8 @@ function show_total(select_num) {
       const cal_num = document.getElementById('num' + i.toString()).value;
       let cal_price = 0;
       if (isPositiveInteger(cal_num)) {
-        const item = document.getElementById('item' + i.toString()).value
-        cal_price = stock_dict[item]["price"];
+        const name = document.getElementById('name' + i.toString()).value
+        cal_price = stock_dict[name]["price"];
       } else {
 
       }
@@ -164,137 +185,49 @@ function show_total(select_num) {
 }
 
 function purchase() {
-  alert("未実装");
+  console.log("purchase")
   req_body = [];
   for (let i = 0; i < num_row; i++) {
     let req_row = {}
     req_row.num = document.getElementById('num' + i.toString()).value;
     if (Number(req_row.num) > 0) {
-      req_row.item = document.getElementById('item' + i.toString()).value;
+      req_row.name = document.getElementById('name' + i.toString()).value;
       req_row.variation = document.getElementById('variation' + i.toString()).value;
       req_row.size = document.getElementById('size' + i.toString()).value;
       req_body.push(req_row);
+    } else { }
+  }
+  console.log(JSON.stringify(req_body))
+  fetch(url2, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(req_body)
+  }).then(response => {
+    if (response.ok) {
+      return response.json();
+    }
+    throw new Error('Network response was not ok.');
+  }).then(data => {
+    if (data.success == 1) {
+      let sentence = "";
+      sentence += `${data.receipt.total}円 ${data.receipt.time}\n`;
+      items = data.receipt.items
+      items.forEach(function (item) {
+        sentence += `${item["name"]},${item["variation"]},${item["size"]},${item["num"]}`;
+      })
+      alert(sentence);
+      window.location.reload();
     } else {
-
+      alert(data["message"]);
     }
-  }
-  const success = api("/api/purchase", req_body);
-}
-
-function api(url, req_body) {
-  stock_dict0 = JSON.parse(localStorage.getItem('stock'));
-  if (url == "/api/purchase") {
-    req_body.forEach(function (row) {
-      if (stock_dict0[req_row.item]["variation"][req_row.variation][req_row.size] - req_row.num > 0) {
-        stock_dict0[req_row.item]["variation"][req_row.variation][req_row.size] -= req_row.num;
-      } else {
-        console.log("SoldOut");
-      }
-    });
-  }
+  }).catch(error => {
+    alert("通信エラーが発生しました\nやり直してください");
+  });
 }
 
 
-function init() {
-  alert("未実装");
-  let stock_dict0 = {
-    "Finnish": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "L": 1
-        }
-      }
-    },
-    "English": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "M": 0,
-          " L": 1
-        }
-      }
-    },
-    "Bulgarian": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "M": 1,
-          " L": 0
-        }
-      }
-    },
-    "Chinese": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "L": 1
-        }
-      }
-    },
-    "Korean": {
-      "price": "2000",
-      "variation": {
-        "whjite": {
-          "M": 0,
-          "L": 0
-        }
-      }
-    },
-    "Italian": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "M": 0,
-          "L": 0
-        }
-      }
-    },
-    "Japanese.Not": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "L": 1
-        }
-      }
-    },
-    "Japanese": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "L": 0
-        }
-      }
-    },
-    "Russian": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "M": 0,
-          "L": 1
-        }
-      }
-    },
-    "French": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "M": 0,
-          "L": 0
-        }
-      }
-    },
-    "Urdu": {
-      "price": "2000",
-      "variation": {
-        "white": {
-          "L": 0
-        }
-      }
-    }
-  }
-  localStorage.setItem("stock", JSON.stringify(stock_dict0));
-}
 function isPositiveInteger(str) {
   return /^\d+$/.test(str) && parseInt(str) > 0;
 }

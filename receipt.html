@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="receipt.js"></script>
+    <title>GGC Shop</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body onload="onload();">
+    <header class="container">
+        <div class="header"><a class="header" href="index.html">購入</a></div>
+        <div class="header"><a class="header" href="stock.html">在庫表</a></div>
+        <div class="header"><a class="header" href="receipt.html">履歴</a></div>
+    </header>
+    <!-- 絞り込み -->
+
+    <table class="table_m" id="table_m">
+        <tr>
+            <th class="time">
+                <label>日時</label>
+            </th>
+            <th class="total">
+                <label>金額</label>
+            </th>
+            <th class="num">
+                <label>購入数</label>
+            </th>
+        </tr>
+    </table>
+    <button type="button" name="button" onclick="init();">初期化</button>
+
+</body>
+
+</html>

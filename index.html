@@ -6,29 +6,33 @@
   <link rel="stylesheet" href="main.css">
 </head>
 
-<body onload="onload();">
+<body onload="load();">
   <header class="container">
-    <div class="header"><a href="index.html">購入</a></div>
-    <div class="header"><a href="stock.html">在庫表</a></div>
-    <div class="header"><a href="history.html">履歴</a></div>
+    <div class="header"><a class="header" href="index.html">購入</a></div>
+    <div class="header"><a class="header" href="stock.html">在庫表</a></div>
+    <div class="header"><a class="header" href="receipt.html">履歴</a></div>
   </header>
   <table class="table_h">
     <tr>
+      <td class="reload">
+        <button class="reload" onclick="load();">再読込</button>
+      </td>
       <td class="add">
-        <button onclick="make_tr()">追加</button>
+        <button class="add" onclick="make_tr()">追加</button>
       </td>
       <td class="total">
-        <span id="sum">計 0円</button>
+        <span class="total" id="sum">計 0円</span>
       </td>
       <td class="purchase">
-        <button onclick="purchase()">決済</button>
+        <button class="purchase" onclick="purchase()">決済</button>
       </td>
     </tr>
   </table>
+  <br>
   <table class="table_m" id="table">
     <tr>
       <th class="cell_h">
-        <label>アイテム</label>
+        <label>アイテム名</label>
       </th>
       <th class="cell_h">
         <label>バリエーション</label>
@@ -44,7 +48,6 @@
       </th>
     </tr>
   </table>
-  <button type="button" name="button" onclick="init();">初期化</button>
   <script type="text/javascript" src="index.js"></script>
 </body>
 

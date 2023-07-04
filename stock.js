@@ -1,5 +1,6 @@
 let url1 = "https://4z2mkmwx7j.execute-api.ap-northeast-1.amazonaws.com/0630-1";
 let url2 = "https://guj4pafnoi.execute-api.ap-northeast-1.amazonaws.com/0630-1"
+
 //let url2 = "https://9ck2x4wh63.execute-api.ap-northeast-1.amazonaws.com/0704-1";
 let stock_dict = {};
 let edit_bool = true;

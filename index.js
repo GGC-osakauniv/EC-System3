@@ -220,6 +220,7 @@ function purchase() {
       alert(sentence);
       window.location.reload();
     } else {
+      console.log("a");
       console.log(JSON.stringify(data.message));
     }
   }).catch(error => {

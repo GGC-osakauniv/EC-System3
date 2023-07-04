@@ -118,6 +118,7 @@ function noneditable() {
     });
 }
 
+
 function save() {
     const elems_stock = document.getElementsByName("stock");
     elems_stock.forEach(function (elem_stock) {
@@ -126,18 +127,19 @@ function save() {
         stock_dict[address[0]]["variation"][address[1]][address[2]] = elem_stock.innerText;
     })
     console.log(stock_dict);
-
     fetch(url2, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Origin': window.location.origin
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(stock_dict)
     }).then(response => {
-        response.json()
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Network response was not ok.');
     }).then(data => {
-        if (data["success"] == 1) {
+        if (data.success == 1) {
             alert("正常に保存しました");
             window.location.reload();
         } else {

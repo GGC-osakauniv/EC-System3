@@ -186,7 +186,7 @@ function show_total(select_num) {
 
 function purchase() {
   console.log("purchase");
-  req_body = [];
+  var req_body = [];
   for (let i = 0; i < num_row; i++) {
     let req_row = {}
     req_row.num = document.getElementById('num' + i.toString()).value;

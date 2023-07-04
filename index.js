@@ -220,7 +220,7 @@ function purchase() {
       alert(sentence);
       window.location.reload();
     } else {
-      console.log("success0");
+      console.log(JSON.stringify(data.message));
     }
   }).catch(error => {
     alert("通信エラーが発生しました\nやり直してください");

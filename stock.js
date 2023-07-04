@@ -141,7 +141,7 @@ function save() {
             alert("正常に保存しました");
             window.location.reload();
         } else {
-            alert(data["message"]);
+            console.log(JSON.stringify(data.message));
         }
     }).catch(error => {
         alert("通信エラーが発生しました\nやり直してください");

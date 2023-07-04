@@ -185,7 +185,7 @@ function show_total(select_num) {
 }
 
 function purchase() {
-  console.log("purchase")
+  console.log("purchase");
   req_body = [];
   for (let i = 0; i < num_row; i++) {
     let req_row = {}
@@ -220,7 +220,7 @@ function purchase() {
       alert(sentence);
       window.location.reload();
     } else {
-      alert(data["message"]);
+      console.log("success0");
     }
   }).catch(error => {
     alert("通信エラーが発生しました\nやり直してください");

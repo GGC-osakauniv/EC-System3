@@ -1,9 +1,10 @@
-const url = "https://4z2mkmwx7j.execute-api.ap-northeast-1.amazonaws.com/0630-1";
+const url1 = "https://4z2mkmwx7j.execute-api.ap-northeast-1.amazonaws.com/0630-1";
+const url2 = "https://9ck2x4wh63.execute-api.ap-northeast-1.amazonaws.com/0704-1";
 let stock_dict = {};
 let edit_bool = true;
 
 function onload() {
-    fetch(url)
+    fetch(url1)
         .then(function (response) {
             if (response.ok) {
                 return response.json();
@@ -16,9 +17,21 @@ function onload() {
         })
         .catch(function (error) {
             // エラーハンドリングを行うコードをここに書く
-            alert("在庫を取得できませんでした。")
+            alert("在庫を取得できませんでした。");
+            return;
         });
-    maketable();
+
+
+    var editSwitch = document.getElementById('editSwitch');
+    var table = document.querySelector('table');
+
+    editSwitch.addEventListener('change', function () {
+        if (editSwitch.checked) {
+            editable();
+        } else {
+            noneditable();
+        }
+    });
 }
 
 function maketable() {
@@ -43,7 +56,9 @@ function maketable() {
                 const td_stock = document.createElement("td");
                 td_stock.innerText = stock_dict[name]["variation"][variation][size];
                 td_stock.style.textAlign = "center";
+                td_stock.setAttribute("id", `${name}/${variation}/${size}`);
                 td_stock.setAttribute("class", "cell_m" + (name_count % 2).toString());
+                td_stock.setAttribute("name", "stock");
                 tr.appendChild(td_stock);
                 tr_list.push(tr);
                 tr_count += 1;
@@ -77,42 +92,46 @@ function maketable() {
     });
 }
 
-function new_product() {
-    edit_bool = true;
-    const elem_new = document.getElementById("new");
-    elem_new.style.backgroundColor = "#76D6FF";
-    const elem_change = document.getElementById("change");
-    elem_change.style.backgroundColor = "#C9C9C9";
-    const elem_delete = document.getElementById("delete");
-    elem_delete.style.backgroundColor = "#C9C9C9";
-}
+function editable() {
 
-function change_product() {
-    edit_bool = false;
-    const elem_new = document.getElementById("new");
-    elem_new.style.backgroundColor = "#C9C9C9";
-    const elem_change = document.getElementById("change");
-    elem_change.style.backgroundColor = "#76D6FF";
-    const elem_delete = document.getElementById("delete");
-    elem_delete.style.backgroundColor = "#C9C9C9";
+    elems_stock = document.getElementById("stock");
+    elems_stock.forEach(function (elem_stock) {
+        var elem_select = document.createElement("select");
+        for (var i = 0; i <= 100; i++) {
+            var optionElement = document.createElement('option');
+            optionElement.value = i;
+            optionElement.text = i;
+            elem_select.appendChild(optionElement);
+        }
+        elem_select.value = elem_stock.innerText;  // 初期値を設定したい値に置き換えてください
+        elem_stock.innerText = null;
+        elem_select.getAttribute("class", "select");
+        elem_stock.appendChild(elem_select);
+    });
 }
-
-function delete_product() {
-    edit_bool = false;
-    const elem_new = document.getElementById("new");
-    elem_new.style.backgroundColor = "#C9C9C9";
-    const elem_change = document.getElementById("change");
-    elem_change.style.backgroundColor = "#C9C9C9";
-    const elem_delete = document.getElementById("delete");
-    elem_delete.style.backgroundColor = "#76D6FF";
+function noneditable() {
+    elems_stock = document.getElementById("stock");
+    elems_stock.forEach(function (elem_stock) {
+        elem_select = elem_stock.getElementByTagName("select");
+        elem_stock.innerText = elem_select.value;
+        elem_select.remove();
+    });
 }
 
 function save() {
+    const elems_stock = document.getElementsByName("stock");
+    elems_stock.forEach(function (elem_stock) {
+        const address = elem_stock.getAttribute("id").split("/");
+        console.log(address);
+        stock_dict[address[0]]["variation"][address[1]][address[2]] = elem_stock.innerText;
+    })
+    console.log(stock_dict);
 
-    fetch('url', {
+    fetch(url2, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Origin': window.location.origin
         },
         body: JSON.stringify(stock_dict)
     }).then(response => {

@@ -20,7 +20,6 @@ function onload() {
             })
             .then(function (data) {
                 stock_dict = data.stock;
-                console.log(stock_dict);
                 localStorage.setItem(key, JSON.stringify(stock_dict));
                 maketable();
             })
@@ -39,7 +38,6 @@ function onload() {
     const editTd = document.getElementById('editTd');
     const editSwitch = document.getElementById('editSwitch');
     editTd.addEventListener('click', function () {
-        console.log("a");
         if (!editbool) {
             editTd.innerText = "編集可能";
             editable();
@@ -165,10 +163,8 @@ function save() {
     const elems_stock = document.getElementsByName("stock");
     elems_stock.forEach(function (elem_stock) {
         const address = elem_stock.getAttribute("id").split("/");
-        console.log(parseInt(elem_stock.innerText));
         stock_dict[address[0]]["variation"][address[1]][address[2]] = parseInt(elem_stock.innerText);
     })
-    console.log(stock_dict);
     fetch(url2, {
         method: 'POST',
         headers: {

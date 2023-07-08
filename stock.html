@@ -3,25 +3,26 @@
 <head>
     <title>GGC Shop</title>
     <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow">
     <link rel="stylesheet" href="main.css">
 </head>
 
 <body onload="onload();">
     <header class="container">
         <div class="header"><a class="header" href="index.html">購入</a></div>
-        <div class="header"><a class="header" href="stock.html">在庫表</a></div>
+        <div class="header"><a class="header" href="stock.html?get=1">在庫表</a></div>
         <div class="header"><a class="header" href="receipt.html">履歴</a></div>
     </header>
-    <table class="table_h">
-        <tr>
-            <td class="new">
-                <input type="checkbox" id="editSwitch" class="switch">
-            </td>
-            <td class="purchase">
-                <button class="purchase" onclick="save()">保存</button>
-            </td>
-        </tr>
-    </table>
+    <div class="table-container">
+        <table class="table_h">
+            <tr>
+                <td class="edit" id="editTd">編集不可</td>
+                <td class="purchase">
+                    <button class="purchase" onclick="save()">保存</button>
+                </td>
+            </tr>
+        </table>
+    </div>
     <br>
     <table class="table_m" id="table_m">
         <tr>
@@ -42,7 +43,6 @@
             </th>
         </tr>
     </table>
-    <button type="button" name="button" onclick="init();">初期化</button>
     <script type="text/javascript" src="stock.js"></script>
 </body>
 

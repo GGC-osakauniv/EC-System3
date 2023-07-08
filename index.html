@@ -3,32 +3,28 @@
 <head>
   <title>GGC Shop</title>
   <meta charset="utf-8" />
+  <meta name="robots" content="noindex, nofollow">
   <link rel="stylesheet" href="main.css">
 </head>
 
 <body onload="load();">
   <header class="container">
     <div class="header"><a class="header" href="index.html">購入</a></div>
-    <div class="header"><a class="header" href="stock.html">在庫表</a></div>
+    <div class="header"><a class="header" href="stock.html?get=1">在庫表</a></div>
     <div class="header"><a class="header" href="receipt.html">履歴</a></div>
   </header>
-  <table class="table_h">
-    <tr>
-      <td class="reload">
-        <button class="reload" onclick="load();">再読込</button>
-      </td>
-      <td class="add">
-        <button class="add" onclick="make_tr()">追加</button>
-      </td>
-      <td class="total">
-        <span class="total" id="sum">計 0円</span>
-      </td>
-      <td class="purchase">
-        <button class="purchase" onclick="purchase()">決済</button>
-      </td>
-    </tr>
-  </table>
-  <br>
+  <div class="table-container">
+    <table class="table_h">
+      <tr>
+        <td class="total">
+          <span class="total" id="sum">計 0円</span>
+        </td>
+        <td class="purchase">
+          <button class="purchase" onclick="purchase()">決済</button>
+        </td>
+      </tr>
+    </table>
+  </div>
   <table class="table_m" id="table">
     <tr>
       <th class="cell_h">
@@ -48,6 +44,7 @@
       </th>
     </tr>
   </table>
+  <button onclick="make_tr()" class="add">追加</button>
   <script type="text/javascript" src="index.js"></script>
 </body>
 

@@ -55,7 +55,6 @@ function show_name(i) {
   const names = Object.keys(stock_dict).sort();
   const select_name = document.getElementById('name' + i.toString());
   const select_variation = document.getElementById('variation' + i.toString());
-  console.log("show_name")
   while (select_variation.firstChild) {
     select_variation.removeChild(select_variation.firstChild);
   }
@@ -178,26 +177,36 @@ function show_total(select_num) {
       }
       sum += Number(cal_price) * Number(cal_num);
       const elem_sum = document.getElementById('sum');
-      console.log(sum)
       elem_sum.innerText = "計 " + sum.toString() + "円";
     }
   });
 }
 
 function purchase() {
-  console.log("purchase");
   var req_body = [];
   for (let i = 0; i < num_row; i++) {
-    let req_row = {}
+    let req_row = {};
+    req_row.name = document.getElementById('name' + i.toString()).value;
+    req_row.variation = document.getElementById('variation' + i.toString()).value;
+    req_row.size = document.getElementById('size' + i.toString()).value;
     req_row.num = document.getElementById('num' + i.toString()).value;
     if (Number(req_row.num) > 0) {
-      req_row.name = document.getElementById('name' + i.toString()).value;
-      req_row.variation = document.getElementById('variation' + i.toString()).value;
-      req_row.size = document.getElementById('size' + i.toString()).value;
+
       req_body.push(req_row);
-    } else { }
+    } else {
+      const result = confirm(`${req_row.name},${req_row.variation},${req_row.size}は売り切れています\n他の商品のみで決済を続行しますか?`);
+      if (result) {
+
+      } else {
+        return;
+      }
+
+    }
   }
-  console.log(JSON.stringify(req_body))
+  if (req_body.length == 0) {
+    alert("全て売り切れの商品です.")
+    return;
+  }
   fetch(url2, {
     method: 'POST',
     headers: {
@@ -210,24 +219,31 @@ function purchase() {
     }
     throw new Error('Network response was not ok.');
   }).then(data => {
+    localStorage.setItem("debug", JSON.stringify(data));
     if (data.success == 1) {
-      let sentence = "";
+      let sentence = "購入できました\n";
       sentence += `${data.receipt.total}円 ${data.receipt.time}\n`;
-      items = data.receipt.items
+      items = data.receipt.items;
       items.forEach(function (item) {
-        sentence += `${item["name"]},${item["variation"]},${item["size"]},${item["num"]}`;
+        sentence += `${item["name"]},${item["variation"]},${item["size"]},${item["num"]}\n`;
       })
       alert(sentence);
       window.location.reload();
     } else {
-      console.log("a");
-      console.log(JSON.stringify(data.message));
+      let sentence = "購入できませんでした.\n";
+      items = data.receipt.items;
+      items.forEach(function (item) {
+        if (item["stock"] == 0) {
+          sentence += `${item["name"]}\n`;
+        }
+      })
+      sentence += "が在庫切れです"
+      alert(sentence);
     }
   }).catch(error => {
     alert("通信エラーが発生しました\nやり直してください");
   });
 }
-
 
 function isPositiveInteger(str) {
   return /^\d+$/.test(str) && parseInt(str) > 0;

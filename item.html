@@ -3,15 +3,62 @@
 <head>
     <title>GGC Shop</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="main.css">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="item.css">
 </head>
 
 <body onload="onload();">
     <header class="container">
-        <div class="header"><a class="header" href="index.html">購入</a></div>
-        <div class="header"><a class="header" href="stock.html">在庫表</a></div>
-        <div class="header"><a class="header" href="receipt.html">履歴</a></div>
+        <div class="header"><a class="header" href="index.html?get=1">購入</a></div>
+        <div class="header"><a class="header" href="stock.html?get=1">在庫表</a></div>
+        <div class="header"><a class="header" href="receipt.html?get=1">履歴</a></div>
     </header>
-    
+    <div class="div-container">
+        <div class="text-container1">
+            <input type="text" id="item"></input>
+        </div>
+        <div class="text-container2">
+            <input type="text" id="price"></input>円
+        </div>
+        <div class="delete-container">
+            <button class="delete-btn" onclick="deleteitem(this)">削除</button>
+        </div>
+        <div class="save-container">
+            <button class="save-btn" onclick="save()">保存</button>
+        </div>
+    </div>
+    <br>
+    <div class="table-container1">
+        <div class="table-container2">
+            <table id="variation-table">
+                <thead>
+                    <tr>
+                        <th>バリエーション</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JavaScriptで動的に生成されます -->
+                </tbody>
+            </table>
+            <button onclick="addVariation()" class="add-btn">追加</button>
+        </div>
+        <div class="table-container3">
+            <table id="size-table">
+                <thead>
+                    <tr>
+                        <th>サイズ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- JavaScriptで動的に生成されます -->
+                </tbody>
+            </table>
+            <button onclick="addSize()" class="add-btn">追加</button>
+        </div>
+    </div>
 </body>
+<script type="text/javascript" src="item.js"></script>
+
 </html>

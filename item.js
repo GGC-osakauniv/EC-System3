@@ -35,7 +35,7 @@ function generateItemInput() {
     input.addEventListener("change", function () {
         if (stock_dict[input.value]) {
             alert("すでに存在しています.");
-            if (input !== null) {
+            if (input.name != null && input.name != "null") {
                 input.value = input.name;
             } else {
                 input.value = "";
@@ -311,6 +311,11 @@ function deleteItem(button) {
     if (result) {
         // 「はい」が選択された場合の処理
         delete stock_dict[item];
+        localStorage.setItem(key, JSON.stringify(stock_dict));
+        const link = "./stock.html";
+        const url = new URL(link, window.location.href);
+        url.searchParams.append("get", "0");
+        window.location.href = url.href;
     } else {
         // 「いいえ」が選択された場合の処理
     }

@@ -179,7 +179,6 @@ function save() {
     }).then(data => {
         if (data.success == 1) {
             alert("正常に保存しました");
-            localStorage.setItem("debug", JSON.stringify(stock_dict));
             window.location.reload();
         } else {
             console.log(JSON.stringify(data.message));

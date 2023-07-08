@@ -15,6 +15,7 @@ window.onload = function () {
     let rawData = localStorage.getItem(key);
     let item = params.get('item');
     stock_dict = JSON.parse(rawData);
+    console.log(stock_dict);
     variations = Object.keys(stock_dict[item]["variation"]);
     sizes = Object.keys(stock_dict[item]["variation"][variations[0]]);
     generateItemInput();

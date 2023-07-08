@@ -1,4 +1,4 @@
-let key = "GGC/EC-system3/receipt";
+let key = "GGC/EC-System3/receipt";
 
 document.addEventListener("DOMContentLoaded", function () {
     let url = new URL(window.location.href);

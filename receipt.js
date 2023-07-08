@@ -1,6 +1,6 @@
 const url = "https://jtwtn4tdkd.execute-api.ap-northeast-1.amazonaws.com/0630-1";
 const history_url = "history.html"
-const key = "GGC/EC-system3/receipt"
+const key = "GGC/EC-System3/receipt"
 let receipt_obj = [];
 
 function onload() {

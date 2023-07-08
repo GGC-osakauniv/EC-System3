@@ -8,14 +8,15 @@ let sizes = [];
 
 let stock_dict = {};
 
+let item;
+
 // 初期化時にテーブルを生成
 window.onload = function () {
     let url = new URL(window.location.href);
     let params = url.searchParams;
     let rawData = localStorage.getItem(key);
-    let item = params.get('item');
+    item = params.get('item');
     stock_dict = JSON.parse(rawData);
-    console.log(stock_dict);
     variations = Object.keys(stock_dict[item]["variation"]);
     sizes = Object.keys(stock_dict[item]["variation"][variations[0]]);
     generateItemInput();

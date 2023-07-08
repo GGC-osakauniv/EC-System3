@@ -29,7 +29,7 @@ function maketable() {
     const table = document.getElementById("table_m");
     tr_list = []
     let tr_count = 0;
-    for (let i = 0; i < receipt_obj.length; i++) {
+    for (let i = receipt_obj.length - 1; i >= 0; i--) {
         const tr = document.createElement("tr");
         const td_time = document.createElement("td");
         const datetime = new Date(receipt_obj[i].time);

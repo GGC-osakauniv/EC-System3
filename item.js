@@ -17,8 +17,11 @@ window.onload = function () {
     let rawData = localStorage.getItem(key);
     item = params.get('item');
     stock_dict = JSON.parse(rawData);
-    variations = Object.keys(stock_dict[item]["variation"]);
-    sizes = Object.keys(stock_dict[item]["variation"][variations[0]]);
+    if (item) {
+        variations = Object.keys(stock_dict[item]["variation"]);
+        sizes = Object.keys(stock_dict[item]["variation"][variations[0]]);
+    }
+
     generateItemInput();
     generatePriceInput();
     generateVariationTable();
@@ -32,36 +35,47 @@ function generateItemInput() {
     input.addEventListener("change", function () {
         if (stock_dict[input.value]) {
             alert("すでに存在しています.");
-            input.value = input.name;
+            if (input !== null) {
+                input.value = input.name;
+            } else {
+                input.value = "";
+            }
+
         } else if (stock_dict[input.name]) {
             stock_dict[input.value] = stock_dict[input.name];
             delete stock_dict[input.name];
             input.name = input.value;
-        }
-        else {
-            stock_dict[item]["variation"][input.value] = {}
-            sizes.forEach(function (size) {
-                stock_dict[input.value]["variation"] = 0;
-                stock_dict[input.value]["price"] = 0;
-            })
-            input.name = input.value;
+            item = input.value;
+        } else {
+            item = input.value;
+            stock_dict[item] = {};
+            stock_dict[item]["variation"] = {};
+            stock_dict[item]["price"] = 0;
+            input.name = item;
         }
     })
 };
 function generatePriceInput() {
     let input = document.getElementById("price");
-    input.value = stock_dict[item]["price"];
-    input.addEventListener("input", function () {
+    try {
+        input.value = stock_dict[item]["price"];
+    } catch (error) {
+        input.value = 0;
+    }
+    input.addEventListener("change", function () {
         try {
-            stock_dict[item]["price"] = parseInt(item.value);
-        } catch {
-            alert("整数で入力してください");
+            stock_dict[item]["price"] = parseInt(input.value);
+        } catch (error) {
+            if (error instanceof TypeError) {
+                // キーが存在しなかった場合のエラー処理
+                alert("先に商品名を決めてください");
+            } else {
+                // その他のエラーの処理
+                alert("整数で入力してください");
+            }
         }
     })
 }
-
-
-
 
 // バリエーションのテーブルを生成
 function generateVariationTable() {
@@ -77,6 +91,10 @@ function generateVariationTable() {
         input.value = variations[i];
         input.name = variations[i];
         input.addEventListener("change", function () {
+            if (item == null) {
+                alert("先に商品名を決めてください");
+                return;
+            }
             if (stock_dict[item]["variation"][input.value]) {
                 alert("すでに存在しています.");
                 input.value = input.name;
@@ -121,6 +139,13 @@ function generateSizeTable() {
         input.value = sizes[i];
         input.name = sizes[i];
         input.addEventListener("change", function () {
+            if (item == null) {
+                alert("先に商品名を決めてください");
+                return;
+            } else if (!variations) {
+                alert("先にバリエーションを決めてください");
+                return;
+            }
             if (stock_dict[item]["variation"][variations[0]][input.value]) {
                 alert("すでに存在しています.");
                 input.value = input.name;
@@ -154,6 +179,10 @@ function generateSizeTable() {
 
 // 行の削除
 function deleteRow_vari(button, variation) {
+    if (item == null) {
+        alert("先に商品名を決めてください");
+        return;
+    }
     const tdElement = button.parentElement.previousElementSibling;
     const inputElement = tdElement.querySelector("input");
     const nameValue = inputElement.getAttribute("name");
@@ -164,6 +193,13 @@ function deleteRow_vari(button, variation) {
 }
 
 function deleteRow_size(button, size) {
+    if (item == null) {
+        alert("先に商品名を決めてください");
+        return;
+    } else if (!variations) {
+        alert("先にバリエーションを決めてください");
+        return;
+    }
     const tdElement = button.parentElement.previousElementSibling;
     const inputElement = tdElement.querySelector("input");
     const nameValue = inputElement.getAttribute("name");
@@ -177,6 +213,10 @@ function deleteRow_size(button, size) {
 
 // バリエーション行の追加
 function addVariation() {
+    if (item == null) {
+        alert("先に商品名を決めてください");
+        return;
+    }
     var table = document.getElementById("variation-table");
     var row = table.insertRow();
     var cell1 = row.insertCell();
@@ -191,6 +231,7 @@ function addVariation() {
             alert("すでに存在しています.");
             input.value = input.name;
         } else if (stock_dict[item]["variation"][input.name]) {
+
             stock_dict[item]["variation"][input.value] = stock_dict[item]["variation"][input.name];
             delete stock_dict[item]["variation"][input.name];
             input.name = input.value;
@@ -211,13 +252,20 @@ function addVariation() {
     button.className = "delete-btn";
     button.textContent = "削除";
     button.onclick = function () {
-        deleteRow_size(this, sizes[i]);
+        deleteRow_vari(this);
     };
     cell2.appendChild(button);
 }
 
 // サイズ行の追加
 function addSize() {
+    if (item == null) {
+        alert("先に商品名を決めてください");
+        return;
+    } else if (variations.length == 0) {
+        alert("先にバリエーションを決めてください");
+        return;
+    }
     var table = document.getElementById("size-table");
     var row = table.insertRow();
     var cell1 = row.insertCell();
@@ -228,6 +276,7 @@ function addSize() {
     input.value = "";
     input.name = "";
     input.addEventListener("change", function () {
+        console.log(variations);
         if (stock_dict[item]["variation"][variations[0]][input.value]) {
             alert("すでに存在しています.");
             input.value = input.name;
@@ -252,7 +301,7 @@ function addSize() {
     button.className = "delete-btn";
     button.textContent = "削除";
     button.onclick = function () {
-        deleteRow(this);
+        deleteRow_size(this);
     };
     cell2.appendChild(button);
 }
@@ -261,9 +310,7 @@ function deleteItem(button) {
     const result = confirm("このアイテムを削除しますか?");
     if (result) {
         // 「はい」が選択された場合の処理
-        const inputElement = document.getElementById("item");
-        const nameValue = inputElement.getAttribute("name");
-        delete stock_dict[nameValue];
+        delete stock_dict[item];
     } else {
         // 「いいえ」が選択された場合の処理
     }

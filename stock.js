@@ -187,3 +187,7 @@ function save() {
         alert("通信エラーが発生しました\nやり直してください");
     });
 }
+
+function add() {
+    window.location.href = 'item.html';
+}
